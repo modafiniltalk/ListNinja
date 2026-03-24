@@ -1,0 +1,74 @@
+ARCHITECT SPEC: ListNinja (Chrome Extension MV3)
+Core Philosophy: A browser-native workflow engine for high-leverage data capture. Not a "to-do" app, but a productivity repository.
+
+1. TECH STACK & ARCHITECTURE
+Framework: React + Vite (Fast HMR, component-based state).
+
+Styling: Tailwind CSS (Custom Glassmorphism utilities).
+
+Icons: Lucide React (Mapped to specific list types).
+
+Storage: - chrome.storage.local: Primary data store for all Lists (bypasses 100KB sync limit).
+
+chrome.storage.sync: User preferences (Themes, Settings).
+
+2. DYNAMIC CONTEXT MENU (THE "HOOK")
+Behavior: Right-click highlighted text -> "Save to ListNinja" -> [Dynamic Submenu of existing lists] + "Create New List".
+
+Background Logic: background.js must use chrome.contextMenus.removeAll() and create() inside a chrome.storage.onChanged listener to keep the menu synced with the sidebar.
+
+Data Payload: Capture selectionText, pageUrl, pageTitle, and timestamp.
+
+New List Flow: Use chrome.action.openPopup() to trigger the UI with the captured text in a "Pending" state for naming.
+
+3. UI: THE GLASSMORPHIC WORKSPACE
+Sidebar (Left): Collapsible. Displays List names + type-specific icons.
+
+Workspace (Right): The active list. Header includes:
+
+List Title (Editable).
+
+Global Toggle: Enable/Disable checkboxes or bullets regardless of type.
+
+Download Button: Export current list to .txt or .csv.
+
+Themes (Toggle in Settings):
+
+Light: Frosted white glass (rgba(255,255,255,0.2)), high-contrast dark text.
+
+Medium (Default): Smoked grey/blue glass (rgba(40,40,50,0.4)), 12px blur.
+
+Dark: Deep obsidian glass (rgba(0,0,0,0.7)), low transparency, light grey text.
+
+4. LIST TYPES & FORMATTING
+Blank (Default): Plain text area.
+
+To-Do: List items with functional checkboxes.
+
+Clipboard: Bulleted list format with a "Copy All to Clipboard" button.
+
+Note: CSS-ruled notebook paper background.
+
+Gym Log: - Structure: Two-column CSS Grid (Exercise | Sets/Weight).
+
+Icon: Dumbbell.
+
+Logic: "Add Row" button at the bottom.
+
+5. DATA PORTABILITY (HUMAN-CENTRIC EXPORTS)
+The "Machine" Backup (.json): Single button in Settings to export/import the entire app state for backups.
+
+The "Human" Download (.txt): Available for all text-based lists. Formats checkboxes as [ ] and appends Source URLs as footnotes.
+
+The "Data" Download (.csv): Exclusive to Gym Logs.
+
+Columns: Date, Exercise, Sets/Weight, Source.
+
+Logic: Sanitize commas in user input to prevent Excel formatting errors.
+
+6. ENGINEERING CONSTRAINTS
+Zero Framework Bloat: Use standard React hooks (useState, useEffect, useMemo).
+
+MV3 Compliance: No eval(), no external scripts. Everything bundled via Vite.
+
+Persistence: High-frequency auto-save to chrome.storage.local.
