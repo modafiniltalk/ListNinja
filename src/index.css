@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+}
+
+@layer components {
+  .glass-panel {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 12px;
+  }
+
+  .theme-light {
+    background: rgba(255, 255, 255, 0.2);
+    color: #1a1a2e;
+  }
+
+  .theme-medium {
+    background: rgba(40, 40, 50, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: #b0b8c8;
+  }
+
+  .theme-dark {
+    background: rgba(0, 0, 0, 0.7);
+    color: #c0c0c0;
+  }
+
+  .note-paper {
+    background-image: repeating-linear-gradient(
+      transparent,
+      transparent 27px,
+      rgba(99, 132, 199, 0.25) 27px,
+      rgba(99, 132, 199, 0.25) 28px
+    );
+    line-height: 28px;
+    padding-top: 4px;
+  }
+}
